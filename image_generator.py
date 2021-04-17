@@ -12,8 +12,6 @@ from bar import print_bar
 import copy
 import threading
 
-from functools import lru_cache
-
 from memo import memoize
 import colorsys
 
@@ -128,7 +126,11 @@ def gen_frame(frame_req: FrameRequest) -> list:
 
     size = frame_req.dimensions.split(':')
     size = [int(i) for i in size]
-    scale = (int(size[0] * frame_req.scaler), int(size[1] * frame_req.scaler))
+
+    sx = int(size[0] * frame_req.scaler)
+    sy = int(size[1] * frame_req.scaler)
+    scale: tuple = (sx - sx % 2, sy - sy % 2)
+
     face = cv2.resize(face, scale)
 
     mouth = cv2.imread(frame_req.mouth_path, cv2.IMREAD_UNCHANGED)
@@ -188,8 +190,9 @@ def ablend(a, fg, bg) -> list:
 
 
 def update_pose_from_timestamps(frame, timestamps, poses_loc, fc, pose):
+    print(timestamps)
     for p in range(len(timestamps)):
-        if frame.frame >= timestamps[p]['time'] and timestamps[p]['time'] != 0:
+        if frame.frame >= timestamps[p]['time']:
 
             pose = get_face_path(timestamps[p]['pose'])
             frame.face_path = pose['face_path']

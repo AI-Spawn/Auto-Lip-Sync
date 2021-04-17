@@ -104,7 +104,7 @@ def shutdown(frames, container) -> None:
 
     export_video = ffmpeg.input('generate/cv.mp4', )
     export_audio = ffmpeg.input(args.audio)
-    ffmpeg.concat(export_video, export_audio, v=1, a=1).output(args.output, loglevel='quiet').run()
+    ffmpeg.concat(export_video, export_audio, v=1, a=1, loglevel='quiet').output(args.output).run()
 
     while not os.path.isfile(args.output):
         pass
@@ -167,6 +167,7 @@ if __name__ == '__main__':
     if args.timestamps != '':
         print('Generating Timestamps...')
         timestamps = gen_timestamps(args.timestamps)
+        print(timestamps)
 
 
     # Generate the feeder script, get poses list, and where each pose should go in the script.

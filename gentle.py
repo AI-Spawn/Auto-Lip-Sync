@@ -5,7 +5,7 @@ import colorama
 import docker
 
 from typing import Union
-
+import time
 try:
     client: docker.DockerClient = docker.from_env()
 except docker.errors.DockerException:
@@ -18,6 +18,7 @@ def init() -> docker.DockerClient.containers:
     # wait until image is running
     while container.status != 'created':
         pass
+    time.sleep(1)
     return container
 
 
